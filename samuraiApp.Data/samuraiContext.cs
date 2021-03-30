@@ -16,6 +16,15 @@ namespace samuraiApp.Data
         public DbSet<Battle> Battles { get; set; }
         public DbSet<Horse> Horses { get; set; }
 
+        public samuraiContext()
+        {
+
+        }
+
+        public samuraiContext(DbContextOptions options) : base(options)
+        {
+
+        }
         public static readonly ILoggerFactory ConsoleLoggerFactory
             = LoggerFactory.Create(builder =>
             {
@@ -28,16 +37,22 @@ namespace samuraiApp.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            if (!optionsBuilder.IsConfigured)
+            {
+
             optionsBuilder
-                .UseLoggerFactory(ConsoleLoggerFactory)
-                .EnableSensitiveDataLogging()
+                //.UseLoggerFactory(ConsoleLoggerFactory)
+                //.EnableSensitiveDataLogging()
                 //.UseSqlServer(connectionString)
-                .UseSqlServer("Data Source = (localdb)\\MSSQLLocalDB; Initial Catalog =samuraiAppData");
+                .UseSqlServer("Data Source = (localdb)\\MSSQLLocalDB; Initial Catalog =samuraiTestData");
+            }
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<SamuraiBattle>().HasKey(s => new { s.SamuraiId, s.BattleId });
             modelBuilder.Entity<Horse>().ToTable("Horses");
         }
+
+        
     }
 }
